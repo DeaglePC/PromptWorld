@@ -1,0 +1,65 @@
+# Go 编译产物
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+
+# Go 模块缓存
+go.sum
+
+# 依赖目录
+vendor/
+
+# IDE 和编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统生成的文件
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# 日志文件
+*.log
+
+# 临时文件
+*.tmp
+*.temp
+
+# 配置文件（可能包含敏感信息）
+config.json
+*.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# 构建目录
+build/
+dist/
+bin/
+
+# 测试覆盖率文件
+*.cover
+coverage.txt
+coverage.html
+
+# 调试文件
+debug
+__debug_bin
+
+# 其他常见忽略文件
+*.orig
+*.rej
+.git/
