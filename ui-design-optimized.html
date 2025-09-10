@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PromptWorld - AI提示词分享平台</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #c6ffdd;  /* fallback for old browsers */
+            background: -webkit-linear-gradient(to right, rgb(198, 255, 221), rgb(251, 215, 134), rgb(247, 121, 125));  /* Chrome 10-25, Safari 5.1-6 */
+            background: linear-gradient(to right, rgb(198, 255, 221), rgb(251, 215, 134), rgb(247, 121, 125)); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            min-height: 100vh;
+            color: #1a202c;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* 动态背景装饰 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(198, 255, 221, 0.3) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(251, 215, 134, 0.2) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(247, 121, 125, 0.15) 0%, transparent 30%);
+            animation: backgroundFloat 20s ease-in-out infinite;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        @keyframes backgroundFloat {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-20px) rotate(1deg); }
+            66% { transform: translateY(10px) rotate(-1deg); }
+        }
+
+        /* 顶部导航栏 */
+        .navbar {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.25) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-top: none;
+            padding: 1rem 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                0 1px 0 rgba(255, 255, 255, 0.2);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2d3748;
+            text-decoration: none;
+            text-shadow: 0 1px 2px rgba(154, 205, 50, 0.3);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 2rem;
+            position: relative;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 3rem;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: #2d3748;
+            font-weight: 500;
+            box-shadow: 
+                0 8px 32px rgba(154, 205, 50, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: rgba(154, 205, 50, 0.4);
+            box-shadow: 
+                0 0 0 3px rgba(154, 205, 50, 0.08),
+                0 8px 32px rgba(154, 205, 50, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        .search-box::placeholder {
+            color: #718096;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9acd32;
+            font-size: 1.2rem;
+        }
+
+        /* 主要内容区域 */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* 分类导航 */
+        .category-nav {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.22) 0%,
+                rgba(255, 255, 255, 0.12) 50%,
+                rgba(255, 255, 255, 0.08) 100%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .category-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 1rem;
+            text-shadow: 0 1px 2px rgba(154, 205, 50, 0.2);
+        }
+
+        .category-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .category-tag {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.25) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 25px;
+            color: #2d3748;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .category-tag:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.35) 0%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.2) 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            color: #1a202c;
+            font-weight: 700;
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        .category-tag.active {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.25) 100%);
+            border-color: rgba(255, 255, 255, 0.5);
+            color: #1a202c;
+            font-weight: 700;
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+
+        /* 提示词卡片网格 */
+        .prompts-grid {
+            column-count: 3;
+            column-gap: 1.5rem;
+            column-fill: balance;
+        }
+
+        @media (max-width: 1024px) {
+            .prompts-grid {
+                column-count: 2;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .prompts-grid {
+                column-count: 1;
+            }
+        }
+
+        .prompt-card {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.25) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4),
+                0 1px 0 rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            break-inside: avoid;
+            display: inline-block;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+
+
+        .prompt-card:hover {
+            transform: translateY(-5px);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.35) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.15) 100%);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5),
+                0 1px 0 rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .prompt-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .prompt-description {
+            color: #4a5568;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-weight: 500;
+        }
+
+        .prompt-content {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            color: #2d3748;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+            position: relative;
+            font-weight: 500;
+            box-shadow: 
+                0 4px 16px rgba(154, 205, 50, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        /* 效果预览区域 */
+        .preview-section {
+            margin: 1rem 0;
+        }
+
+        .preview-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-images {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: flex-start;
+        }
+
+        .preview-image {
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(154, 205, 50, 0.2);
+            background: rgba(154, 205, 50, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .preview-image:hover {
+            transform: scale(1.05);
+            border-color: rgba(154, 205, 50, 0.4);
+            box-shadow: 0 8px 25px rgba(154, 205, 50, 0.2);
+        }
+
+        .preview-image.loading {
+            background: linear-gradient(90deg, rgba(154, 205, 50, 0.1) 0%, rgba(154, 205, 50, 0.2) 50%, rgba(154, 205, 50, 0.1) 100%);
+            background-size: 200% 100%;
+            animation: shimmer 1.5s infinite;
+        }
+
+        .preview-image.loaded {
+            animation: none;
+        }
+
+        @keyframes shimmer {
+            0% { background-position: -200% 0; }
+            100% { background-position: 200% 0; }
+        }
+
+        /* 根据图片数量调整大小 */
+        .preview-images .preview-image:only-child {
+            width: 200px;
+            height: 120px;
+        }
+
+        .preview-images .preview-image:nth-child(-n+2):nth-last-child(-n+2) {
+            width: 140px;
+            height: 110px;
+        }
+
+        .preview-images .preview-image:nth-child(n+3) {
+            width: 100px;
+            height: 100px;
+        }
+
+        .preview-images .preview-image:nth-child(n+4) {
+            width: 150px;
+            height: 100px;
+        }
+
+        .prompt-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(154, 205, 50, 0.2);
+            font-size: 0.85rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        .prompt-stats {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            color: #4a5568;
+            font-weight: 600;
+        }
+
+        /* 提示词类型标识 */
+        .prompt-type {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: rgba(154, 205, 50, 0.2);
+            color: #2d3748;
+            border-radius: 15px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(154, 205, 50, 0.3);
+        }
+
+        /* 按钮样式 */
+        .btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            color: #2d3748;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
+            font-weight: 700;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.2) 100%);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.25) 0%,
+                rgba(255, 255, 255, 0.15) 50%,
+                rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.08),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        .copy-btn:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.35) 0%,
+                rgba(255, 255, 255, 0.25) 50%,
+                rgba(255, 255, 255, 0.2) 100%);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.12),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        }
+
+        /* 浮动操作按钮 */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0.2) 50%,
+                rgba(255, 255, 255, 0.15) 100%);
+            backdrop-filter: blur(25px) saturate(200%);
+            -webkit-backdrop-filter: blur(25px) saturate(200%);
+            color: #2d3748;
+            border: 2px solid rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            font-size: 1.5rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: translateY(-3px) scale(1.1);
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.4) 0%,
+                rgba(255, 255, 255, 0.3) 50%,
+                rgba(255, 255, 255, 0.25) 100%);
+            box-shadow: 
+                0 15px 35px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* 图片模态框 */
+        .image-modal {
+            display: none;
+            position: fixed;
+            z-index: 3000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90%;
+            max-height: 90%;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(154, 205, 50, 0.2);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #2d3748;
+            font-weight: 700;
+            transition: all 0.3s ease;
+            box-shadow: 
+                0 4px 16px rgba(154, 205, 50, 0.05),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .close-modal:hover {
+            background: rgba(154, 205, 50, 0.2);
+            backdrop-filter: blur(20px) saturate(200%);
+            -webkit-backdrop-filter: blur(20px) saturate(200%);
+            transform: scale(1.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 8px 25px rgba(154, 205, 50, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        /* 提示词详情模态框 */
+        .prompt-detail-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(25px) saturate(180%);
+            -webkit-backdrop-filter: blur(25px) saturate(180%);
+            overflow-y: auto;
+        }
+
+        .prompt-detail-content {
+            position: relative;
+            max-width: 800px;
+            margin: 2rem auto;
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.15) 0%,
+                rgba(255, 255, 255, 0.1) 50%,
+                rgba(255, 255, 255, 0.05) 100%);
+            backdrop-filter: blur(30px) saturate(200%);
+            -webkit-backdrop-filter: blur(30px) saturate(200%);
+            border-radius: 25px;
+            padding: 2rem;
+            box-shadow: 
+                0 25px 50px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+        }
+
+        .prompt-detail-header {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .modal-prompt-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin: 1rem 0;
+            line-height: 1.3;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-prompt-description {
+            font-size: 1.1rem;
+            color: #f7fafc;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .prompt-detail-body {
+            margin-bottom: 2rem;
+        }
+
+        .modal-preview-section {
+            margin-bottom: 2rem;
+        }
+
+        .prompt-content-section,
+        .prompt-usage-section {
+            margin-bottom: 2rem;
+        }
+
+        .content-section-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-prompt-content {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.95rem;
+            color: #ffffff;
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            max-height: 400px;
+            overflow-y: auto;
+            box-shadow: 
+                0 4px 16px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.2);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-prompt-usage {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.15) 0%,
+                rgba(255, 255, 255, 0.08) 100%);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 1.2rem;
+            color: #f7fafc;
+            line-height: 1.6;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-prompt-usage p {
+            margin-bottom: 0.5rem;
+        }
+
+        .prompt-detail-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal-prompt-stats {
+            display: flex;
+            gap: 1.5rem;
+        }
+
+        .modal-prompt-stats .stat-item {
+            color: #ffffff;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.2) 0%,
+                rgba(255, 255, 255, 0.1) 100%);
+            backdrop-filter: blur(15px) saturate(180%);
+            -webkit-backdrop-filter: blur(15px) saturate(180%);
+            color: #ffffff;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-secondary:hover {
+            background: linear-gradient(135deg, 
+                rgba(255, 255, 255, 0.3) 0%,
+                rgba(255, 255, 255, 0.2) 100%);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 
+                0 8px 25px rgba(0, 0, 0, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .prompt-detail-content {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+            
+            .modal-prompt-title {
+                font-size: 1.5rem;
+            }
+            
+            .prompt-detail-footer {
+                flex-direction: column;
+                gap: 1rem;
+                align-items: stretch;
+            }
+            
+            .modal-actions {
+                justify-content: center;
+            }
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+            
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .search-container {
+                margin: 0;
+                max-width: 100%;
+            }
+            
+            .main-content {
+                padding: 1rem;
+            }
+            
+            .category-nav {
+                padding: 1rem;
+            }
+            
+            .category-tags {
+                gap: 0.5rem;
+            }
+            
+            .category-tag {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航栏 -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo">🌟 PromptWorld</a>
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" class="search-box" placeholder="搜索AI提示词..." id="searchInput">
+            </div>
+        </div>
+    </nav>
+
+    <!-- 主要内容区域 -->
+    <main class="main-content">
+        <!-- 分类导航 -->
+        <section class="category-nav">
+            <h2 class="category-title">📂 浏览分类</h2>
+            <div class="category-tags">
+                <a href="#" class="category-tag active">全部</a>
+                <a href="#" class="category-tag">文案写作</a>
+                <a href="#" class="category-tag">图像生成</a>
+                <a href="#" class="category-tag">代码编程</a>
+                <a href="#" class="category-tag">商业营销</a>
+                <a href="#" class="category-tag">学习教育</a>
+                <a href="#" class="category-tag">创意设计</a>
+                <a href="#" class="category-tag">数据分析</a>
+            </div>
+        </section>
+
+        <!-- 提示词卡片网格 -->
+        <section class="prompts-grid">
+            <!-- 提示词卡片 1 -->
+            <article class="prompt-card">
+                <div class="prompt-type">📝 文案写作</div>
+                <h3 class="prompt-title">专业文案创作大师</h3>
+                <p class="prompt-description">帮助您创作引人入胜的营销文案，提升品牌影响力和转化率。</p>
+                <div class="prompt-content">
+                    你是一位资深的文案创作专家，擅长撰写各种类型的营销文案。请根据以下要求创作一份吸引人的文案：
+
+                    产品/服务：[在此输入产品或服务名称]
+                    目标受众：[描述目标客户群体]
+                    核心卖点：[列出主要优势]
+                    
+                    要求：
+                    1. 标题要有冲击力，能够立即抓住注意力
+                    2. 内容要突出产品价值和用户利益
+                    3. 语言要生动有趣，避免枯燥的描述
+                    4. 结尾要有明确的行动号召
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 1.2k</span>
+                        <span class="stat-item">💬 89</span>
+                        <span class="stat-item">⭐ 4.8</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+
+            <!-- 提示词卡片 2 -->
+            <article class="prompt-card">
+                <div class="prompt-type">🎨 图像生成</div>
+                <h3 class="prompt-title">AI图像生成大师</h3>
+                <p class="prompt-description">专业的AI艺术创作提示词，帮您生成高质量的艺术作品和设计素材。</p>
+                
+                <div class="preview-section">
+                    <div class="preview-label">
+                        🖼️ 效果预览
+                    </div>
+                    <div class="preview-images">
+                        <img src="https://picsum.photos/300/300?random=1" alt="AI艺术作品1" class="preview-image loading" onclick="openImageModal(this.src)">
+                        <img src="https://picsum.photos/300/300?random=2" alt="AI艺术作品2" class="preview-image loading" onclick="openImageModal(this.src)">
+                    </div>
+                </div>
+                
+                <div class="prompt-content">
+                    Create a stunning digital artwork featuring [主题描述], in the style of [艺术风格], with [色彩方案] color palette. The composition should be [构图描述], with dramatic lighting and intricate details. High resolution, professional quality, trending on ArtStation.
+                    
+                    参数建议：
+                    - 分辨率：1024x1024
+                    - 采样步数：50
+                    - CFG Scale：7-12
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 2.1k</span>
+                        <span class="stat-item">💬 156</span>
+                        <span class="stat-item">⭐ 4.9</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+
+            <!-- 提示词卡片 3 -->
+            <article class="prompt-card">
+                <div class="prompt-type">💻 代码编程</div>
+                <h3 class="prompt-title">代码优化专家</h3>
+                <p class="prompt-description">智能代码审查和优化建议，提升代码质量和性能。</p>
+                <div class="prompt-content">
+                    作为一位经验丰富的软件工程师，请帮我分析以下代码并提供优化建议：
+
+                    [在此粘贴您的代码]
+
+                    请从以下几个方面进行分析：
+                    1. 代码可读性和结构
+                    2. 性能优化机会
+                    3. 潜在的bug和安全问题
+                    4. 最佳实践建议
+                    5. 重构建议（如果需要）
+
+                    请提供具体的改进代码示例。
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 856</span>
+                        <span class="stat-item">💬 67</span>
+                        <span class="stat-item">⭐ 4.7</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+
+            <!-- 提示词卡片 4 -->
+            <article class="prompt-card">
+                <div class="prompt-type">📊 商业营销</div>
+                <h3 class="prompt-title">市场分析顾问</h3>
+                <p class="prompt-description">深度市场分析和商业策略制定，助力企业决策。</p>
+                <div class="prompt-content">
+                    你是一位资深的商业分析师，请对以下市场进行深度分析：
+
+                    行业/市场：[输入目标行业]
+                    地区：[输入目标地区]
+                    时间范围：[分析时间段]
+
+                    请提供：
+                    1. 市场规模和增长趋势
+                    2. 主要竞争对手分析
+                    3. 目标客户画像
+                    4. 市场机会和威胁
+                    5. 进入策略建议
+                    6. 风险评估和应对措施
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 743</span>
+                        <span class="stat-item">💬 45</span>
+                        <span class="stat-item">⭐ 4.6</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+
+            <!-- 提示词卡片 5 -->
+            <article class="prompt-card">
+                <div class="prompt-type">🎓 学习教育</div>
+                <h3 class="prompt-title">个性化学习导师</h3>
+                <p class="prompt-description">根据学习者特点制定个性化学习计划，提升学习效率。</p>
+                <div class="prompt-content">
+                    作为一位经验丰富的教育专家，请为学习者制定个性化学习计划：
+
+                    学习目标：[具体学习目标]
+                    当前水平：[现有知识基础]
+                    可用时间：[每日/每周学习时间]
+                    学习偏好：[学习方式偏好]
+
+                    请提供：
+                    1. 详细的学习路径规划
+                    2. 阶段性学习目标
+                    3. 推荐的学习资源
+                    4. 学习方法和技巧
+                    5. 进度评估标准
+                    6. 激励和坚持策略
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 1.5k</span>
+                        <span class="stat-item">💬 123</span>
+                        <span class="stat-item">⭐ 4.8</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+
+            <!-- 提示词卡片 6 -->
+            <article class="prompt-card">
+                <div class="prompt-type">🎨 创意设计</div>
+                <h3 class="prompt-title">专业摄影师</h3>
+                <p class="prompt-description">专业摄影构图和后期处理指导，提升摄影作品质量。</p>
+                
+                <div class="preview-section">
+                    <div class="preview-label">
+                        📸 作品展示
+                    </div>
+                    <div class="preview-images">
+                        <img src="https://picsum.photos/300/300?random=3" alt="摄影作品1" class="preview-image loading" onclick="openImageModal(this.src)">
+                        <img src="https://picsum.photos/300/300?random=4" alt="摄影作品2" class="preview-image loading" onclick="openImageModal(this.src)">
+                        <img src="https://picsum.photos/300/300?random=5" alt="摄影作品3" class="preview-image loading" onclick="openImageModal(this.src)">
+                    </div>
+                </div>
+                
+                <div class="prompt-content">
+                    Professional photography of [拍摄主题], shot with [相机型号], [镜头规格], in [拍摄环境]. 
+                    
+                    技术参数：
+                    - 光圈：f/[数值]
+                    - 快门：1/[数值]s
+                    - ISO：[数值]
+                    - 焦距：[数值]mm
+                    
+                    构图要求：[构图描述]
+                    光线条件：[光线描述]
+                    后期风格：[后期处理风格]
+                    
+                    High resolution, sharp focus, professional lighting, award-winning photography.
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 967</span>
+                        <span class="stat-item">💬 78</span>
+                        <span class="stat-item">⭐ 4.7</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+
+            <!-- 提示词卡片 7 -->
+            <article class="prompt-card">
+                <div class="prompt-type">🎨 创意设计</div>
+                <h3 class="prompt-title">Logo设计专家</h3>
+                <p class="prompt-description">专业品牌标识设计，打造独特的视觉识别系统。</p>
+                
+                <div class="preview-section">
+                    <div class="preview-label">
+                        🏷️ 设计案例
+                    </div>
+                    <div class="preview-images">
+                        <img src="https://picsum.photos/300/300?random=6" alt="Logo设计1" class="preview-image loading" onclick="openImageModal(this.src)">
+                        <img src="https://picsum.photos/300/300?random=7" alt="Logo设计2" class="preview-image loading" onclick="openImageModal(this.src)">
+                    </div>
+                </div>
+                
+                <div class="prompt-content">
+                    Design a modern, minimalist logo for [公司/品牌名称], a [行业类型] company. 
+                    
+                    设计要求：
+                    - 风格：[现代/经典/创意等]
+                    - 颜色：[主色调偏好]
+                    - 元素：[希望包含的设计元素]
+                    - 应用场景：[使用场合]
+                    
+                    The logo should be:
+                    - Scalable and readable at any size
+                    - Memorable and distinctive
+                    - Appropriate for digital and print media
+                    - Timeless design that won't quickly become outdated
+                    
+                    Vector format, clean lines, professional appearance.
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 1.3k</span>
+                        <span class="stat-item">💬 92</span>
+                        <span class="stat-item">⭐ 4.9</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+
+            <!-- 提示词卡片 8 -->
+            <article class="prompt-card">
+                <div class="prompt-type">📊 数据分析</div>
+                <h3 class="prompt-title">数据科学家</h3>
+                <p class="prompt-description">专业数据分析和机器学习模型构建指导。</p>
+                <div class="prompt-content">
+                    作为一位资深数据科学家，请帮我分析以下数据问题：
+
+                    数据集描述：[数据集基本信息]
+                    业务目标：[要解决的业务问题]
+                    数据规模：[数据量和维度]
+
+                    请提供：
+                    1. 数据探索和清洗策略
+                    2. 特征工程建议
+                    3. 适合的机器学习算法
+                    4. 模型评估指标
+                    5. 结果解释和业务建议
+                    6. 可视化展示方案
+
+                    请包含具体的Python代码示例。
+                </div>
+                <div class="prompt-meta">
+                    <div class="prompt-stats">
+                        <span class="stat-item">👍 654</span>
+                        <span class="stat-item">💬 34</span>
+                        <span class="stat-item">⭐ 4.5</span>
+                    </div>
+                    <button class="btn copy-btn" onclick="copyPrompt(this)">📋 复制</button>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <!-- 浮动操作按钮 -->
+    <button class="fab" onclick="scrollToTop()" title="回到顶部">
+        ↑
+    </button>
+
+    <!-- 图片模态框 -->
+    <div id="imageModal" class="image-modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeImageModal()">&times;</button>
+            <img id="modalImage" class="modal-image" src="" alt="预览图片">
+        </div>
+    </div>
+
+    <!-- 提示词详情模态框 -->
+    <div id="promptDetailModal" class="prompt-detail-modal">
+        <div class="prompt-detail-content">
+            <button class="close-modal" onclick="closePromptDetailModal()">&times;</button>
+            <div class="prompt-detail-header">
+                <div id="modalPromptType" class="prompt-type"></div>
+                <h2 id="modalPromptTitle" class="modal-prompt-title"></h2>
+                <p id="modalPromptDescription" class="modal-prompt-description"></p>
+            </div>
+            <div class="prompt-detail-body">
+                <div id="modalPromptPreview" class="modal-preview-section"></div>
+                <div class="prompt-content-section">
+                    <h3 class="content-section-title">📝 完整提示词</h3>
+                    <div id="modalPromptContent" class="modal-prompt-content"></div>
+                </div>
+                <div class="prompt-usage-section">
+                    <h3 class="content-section-title">💡 使用说明</h3>
+                    <div id="modalPromptUsage" class="modal-prompt-usage">
+                        <p>1. 复制上方的提示词内容</p>
+                        <p>2. 根据您的具体需求替换方括号中的占位符</p>
+                        <p>3. 将完整的提示词输入到AI助手中</p>
+                        <p>4. 根据生成结果进行微调优化</p>
+                    </div>
+                </div>
+            </div>
+            <div class="prompt-detail-footer">
+                <div class="modal-prompt-stats">
+                    <span id="modalLikes" class="stat-item">👍 0</span>
+                    <span id="modalComments" class="stat-item">💬 0</span>
+                    <span id="modalRating" class="stat-item">⭐ 0</span>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-secondary" onclick="favoritePrompt()">❤️ 收藏</button>
+                    <button class="btn copy-btn" onclick="copyModalPrompt()">📋 复制提示词</button>
+                </div>
+            </div>
+        </div>
+    </div>
+=======
+
+    <script>
+        // 搜索功能
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.prompt-card');
+            
+            cards.forEach(card => {
+                const title = card.querySelector('.prompt-title').textContent.toLowerCase();
+                const description = card.querySelector('.prompt-description').textContent.toLowerCase();
+                const content = card.querySelector('.prompt-content').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm) || content.includes(searchTerm)) {
+                    card.style.display = 'inline-block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+
+        // 分类筛选
+        document.querySelectorAll('.category-tag').forEach(tag => {
+            tag.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // 移除所有active类
+                document.querySelectorAll('.category-tag').forEach(t => t.classList.remove('active'));
+                // 添加active类到当前标签
+                this.classList.add('active');
+                
+                const category = this.textContent.trim();
+                const cards = document.querySelectorAll('.prompt-card');
+                
+                cards.forEach(card => {
+                    const cardType = card.querySelector('.prompt-type').textContent.trim();
+                    
+                    if (category === '全部' || cardType.includes(category.replace(/^[📝🎨💻📊🎓]/g, '').trim())) {
+                        card.style.display = 'inline-block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // 复制提示词功能
+        function copyPrompt(button) {
+            const card = button.closest('.prompt-card');
+            const content = card.querySelector('.prompt-content').textContent.trim();
+            
+            navigator.clipboard.writeText(content).then(() => {
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                button.style.background = 'rgba(154, 205, 50, 0.4)';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动选择文本复制');
+            });
+        }
+
+        // 回到顶部
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // 图片模态框功能
+        function openImageModal(src) {
+            const modal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            modalImage.src = src;
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeImageModal() {
+            const modal = document.getElementById('imageModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 点击模态框背景关闭
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeImageModal();
+            }
+        });
+
+        // ESC键关闭模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeImageModal();
+            }
+        });
+
+        // 图片加载优化
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.preview-image');
+            
+            images.forEach((img, index) => {
+                // 设置超时处理
+                const timeout = setTimeout(() => {
+                    if (img.classList.contains('loading')) {
+                        createFallbackImage(img, index);
+                    }
+                }, 5000);
+
+                // 成功加载
+                img.addEventListener('load', function() {
+                    clearTimeout(timeout);
+                    this.classList.remove('loading');
+                    this.classList.add('loaded');
+                });
+
+                // 加载失败
+                img.addEventListener('error', function() {
+                    clearTimeout(timeout);
+                    createFallbackImage(this, index);
+                });
+            });
+        });
+
+        // 创建占位图
+        function createFallbackImage(img, index) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 300;
+            canvas.height = 300;
+
+            // 渐变色彩数组
+            const gradients = [
+                ['#9acd32', '#6b8e23'],
+                ['#adff2f', '#9acd32'],
+                ['#32cd32', '#228b22'],
+                ['#7cfc00', '#32cd32'],
+                ['#98fb98', '#90ee90'],
+                ['#00ff7f', '#00fa9a'],
+                ['#90ee90', '#8fbc8f'],
+                ['#f0fff0', '#e0ffe0']
+            ];
+
+            const gradient = gradients[index % gradients.length];
+            const grd = ctx.createLinearGradient(0, 0, 300, 300);
+            grd.addColorStop(0, gradient[0]);
+            grd.addColorStop(1, gradient[1]);
+
+            ctx.fillStyle = grd;
+            ctx.fillRect(0, 0, 300, 300);
+
+            // 添加图标
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            ctx.font = 'bold 48px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('🎨', 150, 130);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText('示例图片', 150, 180);
+
+            img.src = canvas.toDataURL();
+            img.classList.remove('loading');
+            img.classList.add('loaded');
+        }
+
+        // 提示词详情模态框功能
+        function openPromptDetail(card) {
+            const modal = document.getElementById('promptDetailModal');
+            
+            // 获取卡片信息
+            const type = card.querySelector('.prompt-type').textContent;
+            const title = card.querySelector('.prompt-title').textContent;
+            const description = card.querySelector('.prompt-description').textContent;
+            const content = card.querySelector('.prompt-content').textContent;
+            const stats = card.querySelectorAll('.stat-item');
+            
+            // 填充模态框内容
+            document.getElementById('modalPromptType').textContent = type;
+            document.getElementById('modalPromptTitle').textContent = title;
+            document.getElementById('modalPromptDescription').textContent = description;
+            document.getElementById('modalPromptContent').textContent = content;
+            
+            // 填充统计信息
+            if (stats.length >= 3) {
+                document.getElementById('modalLikes').textContent = stats[0].textContent;
+                document.getElementById('modalComments').textContent = stats[1].textContent;
+                document.getElementById('modalRating').textContent = stats[2].textContent;
+            }
+            
+            // 处理预览图片
+            const previewSection = card.querySelector('.preview-section');
+            const modalPreview = document.getElementById('modalPromptPreview');
+            
+            if (previewSection) {
+                modalPreview.innerHTML = previewSection.outerHTML;
+                modalPreview.style.display = 'block';
+            } else {
+                modalPreview.style.display = 'none';
+            }
+            
+            // 显示模态框
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closePromptDetailModal() {
+            const modal = document.getElementById('promptDetailModal');
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // 复制模态框中的提示词
+        function copyModalPrompt() {
+            const content = document.getElementById('modalPromptContent').textContent;
+            
+            navigator.clipboard.writeText(content).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ 已复制';
+                button.style.background = 'linear-gradient(135deg, rgba(154, 205, 50, 0.4) 0%, rgba(154, 205, 50, 0.3) 100%)';
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '';
+                }, 2000);
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动选择文本复制');
+            });
+        }
+
+        // 收藏功能
+        function favoritePrompt() {
+            const button = event.target;
+            const isFavorited = button.textContent.includes('❤️');
+            
+            if (isFavorited) {
+                button.textContent = '🤍 取消收藏';
+                button.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%)';
+            } else {
+                button.textContent = '❤️ 收藏';
+                button.style.background = 'linear-gradient(135deg, rgba(255, 107, 107, 0.3) 0%, rgba(255, 107, 107, 0.2) 100%)';
+            }
+        }
+
+        // 为所有卡片添加点击事件
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.prompt-card');
+            cards.forEach(card => {
+                // 为卡片添加点击事件，但排除按钮和链接
+                card.addEventListener('click', function(e) {
+                    // 如果点击的是按钮、链接或图片，不触发详情页
+                    if (e.target.closest('.btn') || 
+                        e.target.closest('a') || 
+                        e.target.closest('.preview-image')) {
+                        return;
+                    }
+                    
+                    openPromptDetail(this);
+                });
+                
+                // 添加悬停效果提示
+                card.style.cursor = 'pointer';
+                card.title = '点击查看详情';
+            });
+        });
+
+        // 点击模态框背景关闭
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'promptDetailModal') {
+                closePromptDetailModal();
+            }
+        });
+
+        // ESC键关闭详情模态框
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePromptDetailModal();
+            }
+        });
+    </script>
+</body>
+</html>
