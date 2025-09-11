@@ -47,7 +47,7 @@ func GetPrompts(c *gin.Context) {
 	opts := options.Find()
 	opts.SetLimit(int64(limit))
 	opts.SetSkip(int64(skip))
-	opts.SetSort(bson.D{{"created_at", -1}}) // 按创建时间倒序
+	opts.SetSort(bson.D{{Key: "created_at", Value: -1}}) // 按创建时间倒序
 
 	// 执行查询
 	cursor, err := collection.Find(ctx, filter, opts)
