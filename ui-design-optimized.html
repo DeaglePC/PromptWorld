@@ -475,13 +475,19 @@
                 rgba(255, 255, 255, 0.1) 100%);
             backdrop-filter: blur(15px) saturate(180%);
             -webkit-backdrop-filter: blur(15px) saturate(180%);
-            color: #ffffff;
+            color: #1a202c;
             border: 2px solid rgba(255, 255, 255, 0.3);
             font-weight: 700;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(255, 255, 255, 0.3);
             box-shadow: 
                 0 4px 16px rgba(0, 0, 0, 0.08),
                 inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        }
+
+        /* 详情页中的复制按钮使用白色 */
+        .prompt-detail-modal .copy-btn {
+            color: #ffffff;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.4);
         }
 
         .copy-btn:hover {
@@ -1183,12 +1189,12 @@
                 </div>
                 <div class="modal-actions">
                     <button class="btn btn-secondary" onclick="favoritePrompt()">❤️ 收藏</button>
-                    <button class="btn copy-btn" onclick="copyModalPrompt()">📋 复制提示词</button>
+                    <button class="btn copy-btn" onclick="copyModalPrompt(this)">📋 复制提示词</button>
                 </div>
             </div>
         </div>
     </div>
-=======
+
 
     <script>
         // 搜索功能
@@ -1407,11 +1413,13 @@
         }
 
         // 复制模态框中的提示词
-        function copyModalPrompt() {
+        function copyModalPrompt(buttonElement) {
             const content = document.getElementById('modalPromptContent').textContent;
             
+            // 如果没有传入按钮元素，尝试从事件中获取
+            const button = buttonElement || event.target;
+            
             navigator.clipboard.writeText(content).then(() => {
-                const button = event.target;
                 const originalText = button.textContent;
                 button.textContent = '✅ 已复制';
                 button.style.background = 'linear-gradient(135deg, rgba(154, 205, 50, 0.4) 0%, rgba(154, 205, 50, 0.3) 100%)';
@@ -1422,7 +1430,29 @@
                 }, 2000);
             }).catch(err => {
                 console.error('复制失败:', err);
-                alert('复制失败，请手动选择文本复制');
+                console.log('复制的内容:', content);
+                
+                // 提供备用复制方法
+                try {
+                    const textArea = document.createElement('textarea');
+                    textArea.value = content;
+                    document.body.appendChild(textArea);
+                    textArea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(textArea);
+                    
+                    const originalText = button.textContent;
+                    button.textContent = '✅ 已复制';
+                    button.style.background = 'linear-gradient(135deg, rgba(154, 205, 50, 0.4) 0%, rgba(154, 205, 50, 0.3) 100%)';
+                    
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                        button.style.background = '';
+                    }, 2000);
+                } catch (fallbackErr) {
+                    console.error('备用复制方法也失败:', fallbackErr);
+                    alert('复制失败，请手动选择文本复制');
+                }
             });
         }
 
