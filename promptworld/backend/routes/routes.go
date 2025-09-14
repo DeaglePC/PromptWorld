@@ -40,10 +40,6 @@ func SetupRoutes() *gin.Engine {
 		api.GET("/categories", controllers.GetCategories) // 获取所有分类
 	}
 
-	// 静态文件服务 (暂时注释掉，因为我们使用Taro前端)
-	// router.Static("/static", "../frontend/static")
-	// router.LoadHTMLGlob("../frontend/templates/*")
-
 	// API健康检查
 	router.GET("/", func(c *gin.Context) {
 		c.JSON(200, gin.H{
