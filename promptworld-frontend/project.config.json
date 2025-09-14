@@ -2,7 +2,7 @@
   "miniprogramRoot": "dist/",
   "projectname": "promptworld-frontend",
   "description": "PromptWorld AI提示词分享平台",
-  "appid": "wx1234567890abcdef",
+  "appid": "wx6d78bd83d721dca8",
   "setting": {
     "urlCheck": false,
     "es6": false,

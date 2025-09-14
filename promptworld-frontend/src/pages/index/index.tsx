@@ -176,17 +176,12 @@ const Index = () => {
                         src={img} 
                         className='preview-image loading' 
                         mode='aspectFill'
-                        onLoad={(e) => {
-                          const target = e.target as any;
-                          target.classList.remove('loading');
-                          target.classList.add('loaded');
+                        onLoad={() => {
+                          // 图片加载成功，小程序中不需要手动操作DOM
                         }}
-                        onError={(e) => {
-                          const target = e.target as any;
-                          target.classList.remove('loading');
-                          target.classList.add('loaded');
-                          // 设置占位图
-                          target.src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSIjOWFjZDMyIiBvcGFjaXR5PSIwLjEiLz48dGV4dCB4PSI1MCUiIHk9IjUwJSIgZG9taW5hbnQtYmFzZWxpbmU9Im1pZGRsZSIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IkFyaWFsIiBmb250LXNpemU9IjQ4IiBmaWxsPSIjZmZmZmZmIiBvcGFjaXR5PSIwLjgiPuKIojwvdGV4dD48L3N2Zz4=';
+                        onError={() => {
+                          // 图片加载失败，小程序中不需要手动操作DOM
+                          console.log('图片加载失败');
                         }}
                         onClick={(e) => {
                           e.stopPropagation();
