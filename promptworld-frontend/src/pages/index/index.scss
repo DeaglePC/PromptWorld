@@ -106,11 +106,6 @@
       gap: 12px;
     }
   }
-  
-  /* H5桌面端保持默认样式 */
-  &.platform-desktop {
-    /* 桌面端使用默认的CSS变量和布局 */
-  }
 }
 
 /* 小程序环境的微信小程序特殊适配 */
@@ -453,6 +448,151 @@ html {
   font-weight: 700;
   margin-bottom: 16rpx;
   border: 1px solid rgba(154, 205, 50, 0.3);
+}
+
+/* 新的标签区域样式 */
+.prompt-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  margin-bottom: 16rpx;
+}
+
+.primary-label {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex-wrap: wrap;
+}
+
+.category-label {
+  background: rgba(99, 102, 241, 0.1);
+  color: #4f46e5;
+  padding: 6rpx 16rpx;
+  border-radius: 40rpx;
+  font-size: var(--font-size-small);
+  font-weight: 600;
+  letter-spacing: 0.5rpx;
+  border: 1px solid rgba(99, 102, 241, 0.2);
+  backdrop-filter: blur(10rpx);
+}
+
+.type-label {
+  background: rgba(156, 163, 175, 0.15);
+  color: #6b7280;
+  padding: 4rpx 12rpx;
+  border-radius: 32rpx;
+  font-size: calc(var(--font-size-small) - 2rpx);
+  font-weight: 500;
+  border: 1px solid rgba(156, 163, 175, 0.2);
+  backdrop-filter: blur(8rpx);
+}
+
+.tags-container {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  flex-wrap: wrap;
+}
+
+.tag-item {
+  background: rgba(148, 163, 184, 0.1);
+  color: #64748b;
+  padding: 3rpx 10rpx;
+  border-radius: 24rpx;
+  font-size: calc(var(--font-size-small) - 4rpx);
+  font-weight: 500;
+  border: 1px solid rgba(148, 163, 184, 0.15);
+  backdrop-filter: blur(8rpx);
+  transition: all 0.2s ease;
+}
+
+.tag-item:hover {
+  background: rgba(148, 163, 184, 0.2);
+  color: #475569;
+  transform: translateY(-1rpx);
+  border-color: rgba(148, 163, 184, 0.25);
+}
+
+.more-tags {
+  background: rgba(148, 163, 184, 0.08);
+  color: #94a3b8;
+  padding: 3rpx 8rpx;
+  border-radius: 20rpx;
+  font-size: calc(var(--font-size-small) - 6rpx);
+  font-weight: 500;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+}
+
+/* 新的标签区域样式 */
+.prompt-labels {
+  display: flex;
+  flex-direction: column;
+  gap: 8rpx;
+  margin-bottom: 16rpx;
+}
+
+.primary-label {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+  flex-wrap: wrap;
+}
+
+.category-label {
+  background: linear-gradient(135deg, #eaffd0 0%, #fce38a 100%);
+  color: rgb(39, 39, 39);
+  padding: 6rpx 16rpx;
+  border-radius: 40rpx;
+  font-size: var(--font-size-small);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1rpx;
+  box-shadow: 0 4rpx 16rpx rgba(102, 126, 234, 0.3);
+}
+
+.type-label {
+  color: rgb(53, 51, 51);
+  padding: 4rpx 12rpx;
+  border-radius: 32rpx;
+  font-size: calc(var(--font-size-small) - 2rpx);
+  font-weight: 600;
+}
+
+.tags-container {
+  display: flex;
+  align-items: center;
+  gap: 6rpx;
+  flex-wrap: wrap;
+}
+
+.tag-item {
+  background: rgba(255, 255, 255, 0.15);
+  color: #666;
+  padding: 3rpx 10rpx;
+  border-radius: 24rpx;
+  font-size: calc(var(--font-size-small) - 4rpx);
+  font-weight: 500;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10rpx);
+  transition: all 0.2s ease;
+}
+
+.tag-item:hover {
+  background: rgba(255, 255, 255, 0.25);
+  color: #333;
+  transform: translateY(-1rpx);
+  box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+}
+
+.more-tags {
+  background: rgba(0, 0, 0, 0.1);
+  color: #888;
+  padding: 3rpx 8rpx;
+  border-radius: 20rpx;
+  font-size: calc(var(--font-size-small) - 6rpx);
+  font-weight: 600;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .prompt-title {

@@ -16,7 +16,8 @@ export const mockPrompts = [
 3. 语言要生动有趣，避免枯燥的描述
 4. 结尾要有明确的行动号召`,
     type: '文案写作',
-    category: 'writing',
+    category: '内容创作',
+    tags: ['营销', '文案', '品牌', '转化'],
     likes: 1200,
     comments: 89,
     rating: 4.8,
@@ -33,7 +34,8 @@ export const mockPrompts = [
 - 采样步数：50
 - CFG Scale：7-12`,
     type: '图像生成',
-    category: 'design',
+    category: '创意设计',
+    tags: ['AI绘画', 'Midjourney', 'Stable Diffusion', '艺术创作', '数字艺术'],
     likes: 2100,
     comments: 156,
     rating: 4.9,
@@ -59,7 +61,8 @@ export const mockPrompts = [
 
 请提供具体的改进代码示例。`,
     type: '代码编程',
-    category: 'code',
+    category: '技术开发',
+    tags: ['代码审查', '性能优化', '重构', 'JavaScript', 'Python'],
     likes: 856,
     comments: 67,
     rating: 4.7,
@@ -83,7 +86,8 @@ export const mockPrompts = [
 5. 进入策略建议
 6. 风险评估和应对措施`,
     type: '市场分析',
-    category: 'business',
+    category: '商业策略',
+    tags: ['市场调研', '竞品分析', '商业模式', '数据分析'],
     likes: 743,
     comments: 45,
     rating: 4.6,

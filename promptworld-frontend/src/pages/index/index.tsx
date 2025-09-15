@@ -199,7 +199,24 @@ const Index = () => {
               className='prompt-card'
               onClick={() => openPromptDetail(prompt)}
             >
-              <Text className='prompt-type'>{prompt.type}</Text>
+              {/* 标签区域 - category和tags */}
+              <View className='prompt-labels'>
+                <View className='primary-label'>
+                  <Text className='category-label'>{prompt.category}</Text>
+                  {prompt.type && <Text className='type-label'>{prompt.type}</Text>}
+                </View>
+                {prompt.tags && prompt.tags.length > 0 && (
+                  <View className='tags-container'>
+                    {prompt.tags.slice(0, 3).map((tag, index) => (
+                      <Text key={index} className='tag-item'>#{tag}</Text>
+                    ))}
+                    {prompt.tags.length > 3 && (
+                      <Text className='more-tags'>+{prompt.tags.length - 3}</Text>
+                    )}
+                  </View>
+                )}
+              </View>
+              
               <Text className='prompt-title'>{prompt.title}</Text>
               <Text className='prompt-description'>{prompt.description}</Text>
 
