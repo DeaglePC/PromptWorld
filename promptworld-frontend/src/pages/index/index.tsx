@@ -86,7 +86,19 @@ const Index = () => {
   };
 
   const openImageModal = (imageUrl: string) => {
-    setSelectedImage(imageUrl);
+    // 检查当前环境，小程序使用原生API，H5/PC使用自定义模态框
+    console.log('当前环境:', process.env.TARO_ENV);
+    if (process.env.TARO_ENV === 'weapp' || process.env.TARO_ENV === 'alipay' || process.env.TARO_ENV === 'swan') {
+      // 小程序环境使用原生图片预览
+      Taro.previewImage({
+        current: imageUrl,
+        urls: [imageUrl]
+      });
+    } else {
+      // H5/PC环境使用自定义模态框
+      console.log('设置图片URL:', imageUrl);
+      setSelectedImage(imageUrl);
+    }
   };
 
   const closeImageModal = () => {
@@ -225,12 +237,32 @@ const Index = () => {
         ↑
       </View>
 
-      {/* 图片模态框 */}
+
+
+      {/* H5/PC模式图片模态框 */}
       {selectedImage && (
         <View className='image-modal' onClick={closeImageModal}>
-          <View className='modal-content' onClick={(e) => e.stopPropagation()}>
-            <View className='close-modal' onClick={closeImageModal}>&times;</View>
-            <Image src={selectedImage} className='modal-image' mode='widthFix' />
+          <View className='modal-content' onClick={closeImageModal}>
+            <Image 
+              src={selectedImage} 
+              className='modal-image' 
+              mode='aspectFill'
+              onLoad={() => console.log('H5图片加载成功:', selectedImage)}
+              onError={(e) => console.log('H5图片加载失败:', e, selectedImage)}
+              onClick={closeImageModal}
+              style={{
+                width: '80vw',
+                height: '70vh',
+                maxWidth: '800px',
+                maxHeight: '600px',
+                minWidth: '400px',
+                minHeight: '300px',
+                objectFit: 'cover',
+                borderRadius: '8px',
+                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
+                cursor: 'pointer'
+              }}
+            />
           </View>
         </View>
       )}
