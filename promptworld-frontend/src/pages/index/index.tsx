@@ -13,7 +13,7 @@ const Index = () => {
   const [loading, setLoading] = useState(false);
 
   // API基础URL
-  const API_BASE_URL = 'http://localhost:8081/api/v1';
+  const API_BASE_URL = 'http://192.168.31.33:8081/api/v1';
 
   // 获取分类列表
   const fetchCategories = async () => {
@@ -72,7 +72,6 @@ const Index = () => {
 
   useEffect(() => {
     fetchCategories();
-    fetchPrompts();
   }, []);
 
   useEffect(() => {

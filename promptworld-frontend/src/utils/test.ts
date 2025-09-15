@@ -1,7 +1,7 @@
 // 测试API连接的工具函数
 export const testApiConnection = async () => {
   try {
-    const response = await fetch('http://localhost:8081/')
+    const response = await fetch('http://192.168.31.33:8081/')
     const data = await response.json()
     console.log('API连接测试成功:', data)
     return true
@@ -14,7 +14,7 @@ export const testApiConnection = async () => {
 // 测试获取提示词列表
 export const testGetPrompts = async () => {
   try {
-    const response = await fetch('http://localhost:8081/api/v1/prompts')
+    const response = await fetch('http://192.168.31.33:8081/api/v1/prompts')
     const data = await response.json()
     console.log('获取提示词列表测试:', data)
     return data
@@ -27,7 +27,7 @@ export const testGetPrompts = async () => {
 // 测试获取分类
 export const testGetCategories = async () => {
   try {
-    const response = await fetch('http://localhost:8081/api/v1/categories')
+    const response = await fetch('http://192.168.31.33:8081/api/v1/categories')
     const data = await response.json()
     console.log('获取分类测试:', data)
     return data

@@ -2,8 +2,8 @@ import Taro from '@tarojs/taro'
 
 // API基础配置
 const BASE_URL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:8081/api/v1' 
-  : 'https://your-production-api.com/api/v1'
+  ? 'http://192.168.31.33:8081/api/v1' 
+  : 'http://192.168.31.33:8081/api/v1'
 
 // 请求拦截器
 const request = (options: any) => {
