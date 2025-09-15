@@ -72,6 +72,35 @@ const Index = () => {
 
   useEffect(() => {
     fetchCategories();
+    
+    // 添加环境检测类到body
+    const envClass = process.env.TARO_ENV === 'weapp' || 
+                     process.env.TARO_ENV === 'alipay' || 
+                     process.env.TARO_ENV === 'swan' 
+                     ? 'env-miniprogram' 
+                     : 'env-h5';
+    
+    // 为H5环境添加额外的平台检测
+    let platformClass = '';
+    if (process.env.TARO_ENV === 'h5') {
+      // 检测是否为移动设备
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      platformClass = isMobile ? 'platform-mobile' : 'platform-desktop';
+    }
+    
+    // 添加类到document.documentElement (html元素)
+    const htmlElement = document.documentElement;
+    htmlElement.classList.add(envClass);
+    if (platformClass) {
+      htmlElement.classList.add(platformClass);
+    }
+    
+    console.log('环境检测:', {
+      TARO_ENV: process.env.TARO_ENV,
+      envClass,
+      platformClass,
+      userAgent: navigator.userAgent
+    });
   }, []);
 
   useEffect(() => {

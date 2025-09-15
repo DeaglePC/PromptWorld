@@ -16,9 +16,8 @@
   --font-size-logo: 24px;
 }
 
-/* 小程序环境适配 - 使用更精确的媒体查询 */
-@media screen and (max-width: 750px), 
-       screen and (max-device-width: 750px) {
+/* 小程序环境专用样式 */
+.env-miniprogram {
   :root {
     --font-size-base: 28rpx;
     --font-size-small: 24rpx;
@@ -60,80 +59,93 @@
   }
 }
 
-/* 针对微信小程序的特殊适配 */
-@media screen and (max-width: 375px) {
-  :root {
-    --font-size-base: 30rpx;
-    --font-size-small: 26rpx;
-    --font-size-medium: 26rpx;
-    --font-size-large: 34rpx;
-    --font-size-xl: 44rpx;
-    --font-size-xxl: 42rpx;
-    --font-size-title: 50rpx;
-    --font-size-logo: 50rpx;
+/* H5环境专用样式 */
+.env-h5 {
+  /* H5移动端适配 */
+  &.platform-mobile {
+    :root {
+      --font-size-base: 16px;
+      --font-size-small: 14px;
+      --font-size-medium: 16px;
+      --font-size-large: 18px;
+      --font-size-xl: 20px;
+      --font-size-xxl: 24px;
+      --font-size-title: 28px;
+      --font-size-logo: 24px;
+    }
+    
+    .main-container {
+      padding: 0 12px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .prompts-grid {
+      column-count: 1;
+      column-gap: 0;
+      width: 100%;
+    }
+    
+    .prompt-card {
+      margin-bottom: 16px;
+      padding: 16px 12px;
+      width: 100%;
+      max-width: 100%;
+      box-sizing: border-box;
+      display: block;
+    }
+    
+    .category-nav {
+      margin: 20px 0;
+      padding: 16px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .category-tags {
+      gap: 12px;
+    }
   }
   
-  /* 微信小程序特殊布局适配 */
-  .main-container {
-    padding: 0 8px;
-    width: 100%;
-    box-sizing: border-box;
+  /* H5桌面端保持默认样式 */
+  &.platform-desktop {
+    /* 桌面端使用默认的CSS变量和布局 */
   }
-  
-  .prompts-grid {
-    column-count: 1;
-    column-gap: 0;
-    width: 100%;
-  }
-  
-  .prompt-card {
-    margin-bottom: 12px;
-    padding: 12rpx 8rpx;
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
-    display: block;
-  }
-  
-  .category-nav {
-    margin: 16rpx 0;
-    padding: 12rpx;
-    width: 100%;
-    box-sizing: border-box;
-  }
-  
-  .category-tags {
-    gap: 12rpx;
-  }
-  
-  /* 小程序模式下的图片模态框优化 - 全屏浏览 */
-  .image-modal {
-    background: rgba(0, 0, 0, 0.95);
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    padding: 40rpx;
-    z-index: 9999;
-  }
-  
-  .modal-image {
-    max-width: calc(100vw - 80rpx);
-    max-height: calc(100vh - 80rpx);
-    width: auto;
-    height: auto;
-    border-radius: 8rpx;
-    object-fit: contain;
-    cursor: pointer;
-    display: block;
-    background: white;
-    box-shadow: 0 8rpx 40rpx rgba(0, 0, 0, 0.3);
-  }
-  
-  .modal-content {
-    display: none;
-  }
-  
-  .close-modal {
-    display: none;
+}
+
+/* 小程序环境的微信小程序特殊适配 */
+.env-miniprogram {
+  @media screen and (max-width: 375px) {
+    :root {
+      --font-size-base: 30rpx;
+      --font-size-small: 26rpx;
+      --font-size-medium: 26rpx;
+      --font-size-large: 34rpx;
+      --font-size-xl: 44rpx;
+      --font-size-xxl: 42rpx;
+      --font-size-title: 50rpx;
+      --font-size-logo: 50rpx;
+    }
+    
+    .main-container {
+      padding: 0 8px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .prompt-card {
+      margin-bottom: 12px;
+      padding: 12rpx 8rpx;
+    }
+    
+    .category-nav {
+      margin: 16rpx 0;
+      padding: 12rpx;
+    }
+    
+    .category-tags {
+      gap: 12rpx;
+    }
   }
 }
 
@@ -711,8 +723,8 @@ html {
   display: none;
 }
 
-/* Web环境下的图片模态框样式 - 透明背景 */
-@media screen and (min-width: 751px) {
+/* H5环境下的图片模态框样式 */
+.env-h5 {
   .image-modal {
     background: transparent;
     backdrop-filter: blur(10px) saturate(120%);
@@ -721,52 +733,52 @@ html {
 
   .modal-content {
     position: relative;
-    max-width: 90vw;
-    max-height: 90vh;
-    width: auto;
-    height: auto;
+    width: 95vw;
+    height: 90vh;
     background: transparent;
-    border-radius: 20px;
-    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     cursor: default;
+    box-sizing: border-box;
   }
 
   .modal-image {
-    max-width: 100%;
-    max-height: 80vh;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    max-width: 90vw;
+    max-height: 85vh;
+    width: auto;
+    height: auto;
     object-fit: contain;
     cursor: default;
+    border-radius: 8px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
   }
 
-  .close-modal {
-    position: absolute;
-    top: 10px;
-    right: 15px;
-    background: rgba(0, 0, 0, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 50%;
-    width: 50px;
-    height: 50px;
-    font-size: 24px;
-    cursor: pointer;
-    color: #ffffff;
-    font-weight: 700;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 10;
+  /* H5桌面端特殊样式 */
+  &.platform-desktop {
+    .modal-content {
+      max-width: 90vw;
+      max-height: 90vh;
+    }
+    
+    .modal-image {
+      border-radius: 15px;
+    }
   }
-
-  .close-modal:hover {
-    background: rgba(0, 0, 0, 0.8);
-    transform: scale(1.1);
-    border-color: rgba(255, 255, 255, 0.4);
+  
+  /* H5移动端特殊样式 */
+  &.platform-mobile {
+    .modal-content {
+      width: 100vw;
+      height: 100vh;
+      padding: 20px;
+    }
+    
+    .modal-image {
+      max-width: calc(100vw - 40px);
+      max-height: calc(100vh - 40px);
+    }
   }
 }
 
