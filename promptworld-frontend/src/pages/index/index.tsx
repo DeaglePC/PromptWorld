@@ -82,11 +82,7 @@ const Index = () => {
     fetchCategories();
     
     // 添加环境检测类到body
-    const envClass = process.env.TARO_ENV === 'weapp' || 
-                     process.env.TARO_ENV === 'alipay' || 
-                     process.env.TARO_ENV === 'swan' 
-                     ? 'env-miniprogram' 
-                     : 'env-h5';
+    const envClass = `env-${process.env.TARO_ENV}`;
     
     // 为H5环境添加额外的平台检测
     let platformClass = '';
