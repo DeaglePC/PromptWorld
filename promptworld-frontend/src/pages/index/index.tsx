@@ -10,6 +10,7 @@ const Index = () => {
   const [activeCategory, setActiveCategory] = useState('全部');
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
+  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
 
   // API基础URL
@@ -25,13 +26,20 @@ const Index = () => {
       
       if (response.data.success) {
         setCategories(['全部', ...response.data.data]);
+      } else {
+        console.error('获取分类失败:', response.data.message);
+        Taro.showToast({
+          title: '获取分类失败',
+          icon: 'error'
+        });
       }
     } catch (error) {
       console.error('获取分类失败:', error);
       Taro.showToast({
-        title: '获取分类失败',
+        title: '网络错误，获取分类失败',
         icon: 'error'
       });
+      // 网络错误时保持默认的"全部"分类
     }
   };
 
@@ -114,14 +122,24 @@ const Index = () => {
     });
   };
 
-  const openImageModal = (imageUrl: string) => {
+  const openImageModal = (imageUrl: string, allImages?: string[]) => {
     // 检查当前环境，小程序使用原生API，H5/PC使用自定义模态框
     console.log('当前环境:', process.env.TARO_ENV);
+    console.log('点击的图片URL:', imageUrl);
+    console.log('所有图片URLs:', allImages);
+    
     if (process.env.TARO_ENV === 'weapp' || process.env.TARO_ENV === 'alipay' || process.env.TARO_ENV === 'swan') {
       // 小程序环境使用原生图片预览
+      const urls = allImages || [imageUrl];
+      
+      // 确保current参数是urls数组中的一个元素
+      const currentImage = urls.includes(imageUrl) ? imageUrl : urls[0];
+      
+      console.log('预览参数:', { current: currentImage, urls });
+      
       Taro.previewImage({
-        current: imageUrl,
-        urls: [imageUrl]
+        current: currentImage,
+        urls: urls
       });
     } else {
       // H5/PC环境使用自定义模态框
@@ -172,7 +190,9 @@ const Index = () => {
         {/* 分类导航 */}
         <View className='category-nav'>
           <Text className='category-title'>📂 浏览分类</Text>
-          <View className='category-tags'>
+          
+          {/* 桌面端横向标签 */}
+          <View className='category-tags desktop-only'>
             {categories.map(cat => (
               <Text
                 key={cat}
@@ -182,6 +202,46 @@ const Index = () => {
                 {cat}
               </Text>
             ))}
+          </View>
+          
+          {/* 移动端下拉按钮 */}
+          <View className='category-dropdown mobile-only'>
+            <View 
+              className='dropdown-trigger'
+              onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
+            >
+              <Text className='current-category'>{activeCategory}</Text>
+              <Text className='dropdown-arrow'>{showCategoryDropdown ? '▲' : '▼'}</Text>
+            </View>
+            
+            {showCategoryDropdown && (
+              <View 
+                className='dropdown-menu'
+                style={{
+                  position: 'absolute',
+                  top: '100%',
+                  left: '0',
+                  right: '0',
+                  zIndex: 9999
+                }}
+              >
+                <View className='dropdown-content'>
+                  {categories.map(cat => (
+                    <View
+                      key={cat}
+                      className={`dropdown-item ${activeCategory === cat ? 'active' : ''}`}
+                      onClick={() => {
+                        setActiveCategory(cat);
+                        setShowCategoryDropdown(false);
+                      }}
+                    >
+                      <Text className='dropdown-text'>{cat}</Text>
+                      {activeCategory === cat && <Text className='check-icon'>✓</Text>}
+                    </View>
+                  ))}
+                </View>
+              </View>
+            )}
           </View>
         </View>
 
@@ -199,26 +259,27 @@ const Index = () => {
               className='prompt-card'
               onClick={() => openPromptDetail(prompt)}
             >
-              {/* 标签区域 - category和tags */}
-              <View className='prompt-labels'>
-                <View className='primary-label'>
-                  <Text className='category-label'>{prompt.category}</Text>
-                  {prompt.type && <Text className='type-label'>{prompt.type}</Text>}
-                </View>
-                {prompt.tags && prompt.tags.length > 0 && (
-                  <View className='tags-container'>
-                    {prompt.tags.slice(0, 3).map((tag, index) => (
-                      <Text key={index} className='tag-item'>#{tag}</Text>
-                    ))}
-                    {prompt.tags.length > 3 && (
-                      <Text className='more-tags'>+{prompt.tags.length - 3}</Text>
-                    )}
-                  </View>
-                )}
-              </View>
-              
+              {/* 标题 */}
               <Text className='prompt-title'>{prompt.title}</Text>
               <Text className='prompt-description'>{prompt.description}</Text>
+              
+              {/* 主标签区域 */}
+              <View className='primary-label'>
+                <Text className='category-label'>{prompt.category}</Text>
+                {prompt.type && <Text className='type-label'>{prompt.type}</Text>}
+              </View>
+              
+              {/* #标签区域 */}
+              {prompt.tags && prompt.tags.length > 0 && (
+                <View className='hashtags-container'>
+                  {prompt.tags.slice(0, 3).map((tag, index) => (
+                    <Text key={index} className='hashtag-item'>#{tag}</Text>
+                  ))}
+                  {prompt.tags.length > 3 && (
+                    <Text className='more-hashtags'>+{prompt.tags.length - 3}</Text>
+                  )}
+                </View>
+              )}
 
               {/* 图片预览区 */}
               {prompt.preview_images && prompt.preview_images.length > 0 && (
@@ -242,7 +303,7 @@ const Index = () => {
                         }}
                         onClick={(e) => {
                           e.stopPropagation();
-                          openImageModal(img);
+                          openImageModal(img, prompt.preview_images);
                         }}
                       />
                     ))}
@@ -344,7 +405,7 @@ const Index = () => {
                         mode='aspectFill'
                         onClick={(e) => {
                           e.stopPropagation();
-                          openImageModal(img);
+                          openImageModal(img, selectedPrompt.preview_images);
                         }}
                       />
                     ))}
