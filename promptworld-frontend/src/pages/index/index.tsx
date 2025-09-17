@@ -81,30 +81,37 @@ const Index = () => {
   useEffect(() => {
     fetchCategories();
     
-    // 添加环境检测类到body
+    // 添加环境检测类
     const envClass = `env-${process.env.TARO_ENV}`;
     
-    // 为H5环境添加额外的平台检测
-    let platformClass = '';
+    // 只在H5环境下操作DOM
     if (process.env.TARO_ENV === 'h5') {
+      // 为H5环境添加额外的平台检测
+      let platformClass = '';
       // 检测是否为移动设备
       const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
       platformClass = isMobile ? 'platform-mobile' : 'platform-desktop';
+      
+      // 添加类到document.documentElement (html元素)
+      const htmlElement = document.documentElement;
+      htmlElement.classList.add(envClass);
+      if (platformClass) {
+        htmlElement.classList.add(platformClass);
+      }
+      
+      console.log('H5环境检测:', {
+        TARO_ENV: process.env.TARO_ENV,
+        envClass,
+        platformClass,
+        userAgent: navigator.userAgent
+      });
+    } else {
+      // 小程序环境
+      console.log('小程序环境检测:', {
+        TARO_ENV: process.env.TARO_ENV,
+        envClass
+      });
     }
-    
-    // 添加类到document.documentElement (html元素)
-    const htmlElement = document.documentElement;
-    htmlElement.classList.add(envClass);
-    if (platformClass) {
-      htmlElement.classList.add(platformClass);
-    }
-    
-    console.log('环境检测:', {
-      TARO_ENV: process.env.TARO_ENV,
-      envClass,
-      platformClass,
-      userAgent: navigator.userAgent
-    });
   }, []);
 
   useEffect(() => {
@@ -164,7 +171,7 @@ const Index = () => {
   };
 
   return (
-    <View className='index'>
+    <View className={`index env-${process.env.TARO_ENV}`}>
       {/* 顶部导航栏 */}
       <View className='navbar'>
         <View className='nav-container'>
