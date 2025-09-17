@@ -616,6 +616,20 @@ html {
   color: #718096;
 }
 
+/* H5环境下搜索框垂直居中修复 */
+.env-h5 .search-box {
+  padding: 12px 16px 12px 48px;
+  line-height: 1.5;
+  display: flex;
+  align-items: center;
+  height: 48px;
+  box-sizing: border-box;
+}
+
+.env-h5 .search-icon {
+  left: 16px;
+}
+
 .search-icon {
   position: absolute;
   left: 32rpx;
@@ -948,6 +962,21 @@ html {
   margin-bottom: 32rpx;
   text-shadow: 0 1px 2px rgba(154, 205, 50, 0.2);
   text-align: left;
+}
+
+/* 小程序环境下增加标题字体大小 */
+.env-weapp .category-title,
+.env-alipay .category-title,
+.env-swan .category-title {
+  font-size: var(--font-size-xxl) !important;
+  font-weight: 700 !important;
+}
+
+.env-weapp .logo,
+.env-alipay .logo,
+.env-swan .logo {
+  font-size: var(--font-size-title) !important;
+  font-weight: 800 !important;
 }
 
 .category-tags {
