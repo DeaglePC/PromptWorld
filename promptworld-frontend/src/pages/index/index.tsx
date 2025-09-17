@@ -228,7 +228,13 @@ const Index = () => {
                   zIndex: 9999
                 }}
               >
-                <View className='dropdown-content'>
+                <ScrollView 
+                  className='dropdown-content'
+                  scrollY
+                  style={{
+                    maxHeight: '400rpx'
+                  }}
+                >
                   {categories.map(cat => (
                     <View
                       key={cat}
@@ -242,7 +248,7 @@ const Index = () => {
                       {activeCategory === cat && <Text className='check-icon'>✓</Text>}
                     </View>
                   ))}
-                </View>
+                </ScrollView>
               </View>
             )}
           </View>

@@ -254,8 +254,11 @@
   
   /* 小程序下拉框优化 */
   .dropdown-content {
-    max-height: 500rpx;
+    max-height: 400rpx;
     border-radius: 20rpx;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10rpx);
+    box-shadow: 0 8rpx 32rpx rgba(0, 0, 0, 0.1);
     
     /* 移除小程序不支持的样式 */
     &::before,
@@ -267,6 +270,12 @@
     &::-webkit-scrollbar {
       display: none;
     }
+  }
+  
+  .dropdown-menu {
+    background: transparent;
+    border-radius: 20rpx;
+    overflow: hidden;
   }
   
   .dropdown-trigger {
