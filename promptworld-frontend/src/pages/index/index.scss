@@ -63,7 +63,7 @@
   
   /* 小程序布局适配 */
   .main-container {
-    padding: 0 30rpx;
+    padding: 40rpx 50rpx;
     width: 100%;
     box-sizing: border-box;
   }
@@ -86,7 +86,7 @@
   
   .category-nav {
     margin: 40rpx 0;
-    padding: 30rpx;
+    padding: 50rpx;
     width: 100%;
     box-sizing: border-box;
     border-radius: 25rpx;
@@ -278,6 +278,17 @@
     overflow: hidden;
   }
   
+  /* 小程序点击反馈优化 */
+  .prompt-card-hover {
+    transform: scale(0.98);
+    opacity: 0.9;
+  }
+  
+  .copy-btn-hover {
+    background: rgba(74, 144, 226, 0.8) !important;
+    transform: scale(0.95);
+  }
+  
   .dropdown-trigger {
     padding: 20rpx 30rpx;
     border-radius: 20rpx;
@@ -458,7 +469,7 @@
     }
     
     .main-container {
-      padding: 0 8px;
+      padding: 40rpx 50rpx;
       width: 100%;
       box-sizing: border-box;
     }
@@ -647,6 +658,13 @@ html {
   z-index: 100;
 }
 
+/* 小程序环境下的分类导航增加padding */
+.env-weapp .category-nav,
+.env-alipay .category-nav,
+.env-swan .category-nav {
+  padding: 50rpx !important;
+}
+
 /* 响应式显示控制 */
 .desktop-only {
   display: flex;
@@ -654,12 +672,6 @@ html {
 
 .mobile-only {
   display: none;
-}
-
-/* 移动端下拉选择器 */
-.category-dropdown {
-  position: relative;
-  width: 100%;
 }
 
 .dropdown-trigger {
@@ -824,6 +836,7 @@ html {
 .category-dropdown {
   position: relative;
   width: 100%;
+  margin-top: 25rpx;
 }
 
 .dropdown-trigger {
@@ -998,7 +1011,14 @@ html {
 
 /* 主内容区 */
 .main-content {
-  padding: 0;
+  padding: 0rpx;
+}
+
+/* 小程序环境下增加与分类导航的距离 */
+.env-weapp .main-content,
+.env-alipay .main-content,
+.env-swan .main-content {
+  margin-top: 60rpx;
 }
 
 /* 瀑布流布局 */
