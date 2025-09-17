@@ -12,6 +12,15 @@ const Index = () => {
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [expandedTags, setExpandedTags] = useState<{[key: string]: boolean}>({});
+
+  // 切换标签展开状态
+  const toggleTagsExpansion = (promptId: string) => {
+    setExpandedTags(prev => ({
+      ...prev,
+      [promptId]: !prev[promptId]
+    }));
+  };
 
   // API基础URL
   const API_BASE_URL = 'http://192.168.31.33:8081/api/v1';
@@ -281,11 +290,16 @@ const Index = () => {
               {/* #标签区域 */}
               {prompt.tags && prompt.tags.length > 0 && (
                 <View className='hashtags-container'>
-                  {prompt.tags.slice(0, 3).map((tag, index) => (
+                  {(expandedTags[prompt.id] ? prompt.tags : prompt.tags.slice(0, 3)).map((tag, index) => (
                     <Text key={index} className='hashtag-item'>#{tag}</Text>
                   ))}
                   {prompt.tags.length > 3 && (
-                    <Text className='more-hashtags'>+{prompt.tags.length - 3}</Text>
+                    <Text 
+                      className='more-hashtags'
+                      onClick={() => toggleTagsExpansion(prompt.id)}
+                    >
+                      {expandedTags[prompt.id] ? '收起' : `+${prompt.tags.length - 3}`}
+                    </Text>
                   )}
                 </View>
               )}

@@ -1379,6 +1379,21 @@ html {
     font-size: calc(var(--font-size-small) - 6rpx);
     font-weight: 600;
     border: 1px solid rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none;
+  }
+
+  .more-hashtags:hover {
+    background: rgba(0, 0, 0, 0.2);
+    color: #555;
+    transform: translateY(-1rpx);
+    box-shadow: 0 2rpx 8rpx rgba(0, 0, 0, 0.1);
+  }
+
+  .more-hashtags:active {
+    transform: translateY(0);
+    background: rgba(0, 0, 0, 0.25);
   }
 }
 
@@ -1399,6 +1414,21 @@ html {
   .more-hashtags {
     padding: 6rpx 14rpx !important;
     font-size: 22rpx !important;
+    cursor: pointer !important;
+    transition: all 0.2s ease !important;
+    user-select: none !important;
+  }
+
+  .more-hashtags:hover {
+    background: rgba(0, 0, 0, 0.2) !important;
+    color: #555 !important;
+    transform: translateY(-2rpx) !important;
+    box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .more-hashtags:active {
+    transform: translateY(0) !important;
+    background: rgba(0, 0, 0, 0.25) !important;
   }
 }
 
