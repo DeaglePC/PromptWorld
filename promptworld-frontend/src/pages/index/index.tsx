@@ -166,10 +166,35 @@ const Index = () => {
 
   const openPromptDetail = (prompt: Prompt) => {
     setSelectedPrompt(prompt);
+    
+    // 禁用背景滚动
+    if (process.env.TARO_ENV === 'h5') {
+      // H5环境下完整禁用body滚动并记录位置
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollTop}px`;
+      document.body.style.left = '0';
+      document.body.style.right = '0';
+      document.body.style.overflow = 'hidden';
+      document.body.style.width = '100%';
+    }
   };
 
   const closePromptDetailModal = () => {
     setSelectedPrompt(null);
+    
+    // 恢复背景滚动
+    if (process.env.TARO_ENV === 'h5') {
+      // H5环境下恢复body滚动和位置
+      const top = parseInt(document.body.style.top || '0', 10) || 0;
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.left = '';
+      document.body.style.right = '';
+      document.body.style.overflow = '';
+      document.body.style.width = '';
+      window.scrollTo(0, -top);
+    }
   };
 
   const scrollToTop = () => {
@@ -371,7 +396,11 @@ const Index = () => {
 
       {/* H5/PC模式图片模态框 */}
       {selectedImage && (
-        <View className='image-modal' onClick={closeImageModal}>
+        <View 
+          className='image-modal' 
+          onClick={closeImageModal}
+          catchMove={process.env.TARO_ENV !== 'h5'} // 小程序环境下阻止滚动穿透
+        >
           <View className='modal-content' onClick={closeImageModal}>
             <Image 
               src={selectedImage} 
@@ -399,7 +428,11 @@ const Index = () => {
 
       {/* 提示词详情模态框 */}
       {selectedPrompt && (
-        <View className='prompt-detail-modal' onClick={closePromptDetailModal}>
+        <View 
+          className='prompt-detail-modal' 
+          onClick={closePromptDetailModal}
+          catchMove={process.env.TARO_ENV !== 'h5'} // 小程序环境下阻止滚动穿透
+        >
           <View className='prompt-detail-content' onClick={(e) => e.stopPropagation()}>
             {/* 关闭按钮 */}
             <View className='close-modal' onClick={closePromptDetailModal}>×</View>
@@ -446,9 +479,9 @@ const Index = () => {
                   <Text className='content-text'>{selectedPrompt.content}</Text>
                 </ScrollView>
               </View>
-
+              
               {/* 使用说明 */}
-              <View className='usage-section'>
+              {/* <View className='usage-section'>
                 <View className='section-header'>
                   <Text className='section-icon'>💡</Text>
                   <Text className='section-title'>使用说明</Text>
@@ -471,7 +504,7 @@ const Index = () => {
                     <Text className='step-text'>根据生成结果进行微调优化</Text>
                   </View>
                 </View>
-              </View>
+              </View> */}
             </View>
 
             {/* 底部操作区 */}
