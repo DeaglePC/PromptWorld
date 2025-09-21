@@ -96,6 +96,13 @@ export default function Detail() {
           <View className='prompt-type'>{prompt.type}</View>
           <Text className='prompt-title'>{prompt.title}</Text>
           <Text className='prompt-description'>{prompt.description}</Text>
+          
+          {/* 统计信息 */}
+          <View className='stats-row'>
+            <Text className='stat-item'>👍 {formatNumber(prompt.likes || 0)}</Text>
+            <Text className='stat-item'>💬 {formatNumber(prompt.comments || 0)}</Text>
+            <Text className='stat-item'>⭐ {(prompt.rating || 0).toFixed(1)}</Text>
+          </View>
         </View>
 
         {/* 预览图片 */}
@@ -139,20 +146,12 @@ export default function Detail() {
           </View>
         </View>
 
-        {/* 统计信息和操作 */}
+        {/* 操作按钮 */}
         <View className='detail-footer'>
-          <View className='footer-horizontal-layout'>
-            <View className='stats-left'>
-              <Text className='stat-item'>👍 {formatNumber(prompt.likes || 0)}</Text>
-              <Text className='stat-item'>💬 {formatNumber(prompt.comments || 0)}</Text>
-              <Text className='stat-item'>⭐ {(prompt.rating || 0).toFixed(1)}</Text>
-            </View>
-            
-            <View className='buttons-right'>
-              <View className='btn btn-secondary'>❤️ 收藏</View>
-              <View className='btn btn-primary' onClick={handleCopy}>
-                📋 复制提示词
-              </View>
+          <View className='buttons-right'>
+            <View className='btn btn-secondary'>❤️ 收藏</View>
+            <View className='btn btn-primary' onClick={handleCopy}>
+              📋 复制提示词
             </View>
           </View>
         </View>

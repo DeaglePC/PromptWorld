@@ -4,7 +4,7 @@
   background: linear-gradient(to right, rgb(198, 255, 221), rgb(251, 215, 134), rgb(247, 121, 125));
   position: relative;
 
-  // 动态背景装�?
+  // 动态背景装�?
   &::before {
     content: '';
     position: fixed;
@@ -120,9 +120,29 @@
       font-size: 14rpx;
       color: #f7fafc;
       line-height: 1.6;
-      margin-bottom: 0;
+      margin-bottom: 16rpx;
       font-weight: 500;
       text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 24rpx;
+      margin-top: 16rpx;
+      
+      .stat-item {
+        color: #ffffff;
+        font-weight: 600;
+        font-size: 14rpx;
+        text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
+        background: rgba(255, 255, 255, 0.1);
+        padding: 8rpx 16rpx;
+        border-radius: 20rpx;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+      }
     }
   }
 
@@ -211,90 +231,11 @@
       margin-bottom: 8px;
     }
   }
-
-  .detail-footer {
-    background: linear-gradient(135deg, 
-      rgba(255, 255, 255, 0.25) 0%,
-      rgba(255, 255, 255, 0.1) 50%,
-      rgba(255, 255, 255, 0.05) 100%);
-    backdrop-filter: blur(30px) saturate(200%);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-
-    .footer-content {
-      display: flex !important;
-      justify-content: space-between !important;
-      align-items: center !important;
-      width: 100% !important;
-      flex-direction: row !important;
-    }
-
-    .prompt-stats {
-      display: flex !important;
-      justify-content: flex-start !important;
-      gap: 24px !important;
-      flex-shrink: 0 !important;
-
-      .stat-item {
-        color: #ffffff;
-        font-weight: 600;
-        font-size: 16rpx;
-        text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
-      }
-    }
-
-    .action-buttons {
-      display: flex !important;
-      flex-direction: row !important;
-      gap: 16px !important;
-      justify-content: flex-end !important;
-      flex-shrink: 0 !important;
-
-      .btn {
-        padding: 12px 24px;
-        border-radius: 25px;
-        font-size: 16rpx;
-        font-weight: 600;
-        text-align: center;
-        transition: all 0.3s ease;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        white-space: nowrap;
-
-        &.btn-secondary {
-          background: linear-gradient(135deg, 
-            rgba(255, 255, 255, 0.2) 0%,
-            rgba(255, 255, 255, 0.1) 100%);
-          backdrop-filter: blur(15px) saturate(180%);
-          color: #ffffff;
-          text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-        }
-
-        &.btn-primary {
-          background: linear-gradient(135deg, 
-            rgba(255, 255, 255, 0.3) 0%,
-            rgba(255, 255, 255, 0.15) 50%,
-            rgba(255, 255, 255, 0.1) 100%);
-          backdrop-filter: blur(20px) saturate(180%);
-          color: #2d3748;
-          text-shadow: 0 1px 2px rgba(255, 255, 255, 0.5);
-          font-weight: 700;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-        }
-
-        &:active {
-          transform: translateY(-2px);
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-          border-color: rgba(255, 255, 255, 0.4);
-        }
-      }
-    }
-  }
 }
 
-/* 按照设计稿实现的详情页底部布局 */
+/* 详情页底部布局 */
 .detail-footer {
+  display: block;
   background: linear-gradient(135deg, 
     rgba(255, 255, 255, 0.25) 0%,
     rgba(255, 255, 255, 0.1) 50%,
@@ -305,28 +246,9 @@
   padding: 1.5rem;
   box-shadow: 0 0.5rem 2rem rgba(0, 0, 0, 0.1);
 
-  .footer-horizontal-layout {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
-  }
-
-  .stats-left {
-    display: flex;
-    gap: 1.5rem;
-    
-    .stat-item {
-      color: #ffffff;
-      font-weight: 600;
-      font-size: 16rpx;
-      text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.3);
-    }
-  }
-
   .buttons-right {
     display: flex;
+    justify-content: center;
     gap: 1rem;
     
     .btn {
@@ -392,6 +314,31 @@
         0 0.5rem 1.5625rem rgba(0, 0, 0, 0.15),
         inset 0 0.0625rem 0 rgba(255, 255, 255, 0.4);
       border-color: rgba(255, 255, 255, 0.5);
+    }
+  }
+  
+  /* H5 小屏幕响应式布局 */
+  @media screen and (max-width: 480px) {
+    .footer-horizontal-layout {
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    
+    .stats-left {
+      justify-content: center;
+      width: 100%;
+    }
+    
+    .buttons-right {
+      flex-direction: column;
+      width: 100%;
+      
+      .btn {
+        width: 100%;
+        justify-content: center;
+        padding: 0.75rem 1rem;
+      }
     }
   }
 }

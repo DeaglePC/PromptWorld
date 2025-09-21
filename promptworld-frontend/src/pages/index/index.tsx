@@ -441,6 +441,22 @@ const Index = () => {
             <View className='prompt-detail-header'>
               <Text className='modal-prompt-title'>{selectedPrompt.title}</Text>
               <Text className='modal-prompt-description'>{selectedPrompt.description}</Text>
+              
+              {/* 统计信息 */}
+              <View className='stats-row'>
+                <View className='stat-item'>
+                  <Text className='stat-icon'>🔥</Text>
+                  <Text className='stat-value'>{selectedPrompt.likes}</Text>
+                </View>
+                <View className='stat-item'>
+                  <Text className='stat-icon'>💬</Text>
+                  <Text className='stat-value'>{selectedPrompt.comments}</Text>
+                </View>
+                <View className='stat-item'>
+                  <Text className='stat-icon'>⭐</Text>
+                  <Text className='stat-value'>{selectedPrompt.rating}</Text>
+                </View>
+              </View>
             </View>
 
             {/* 内容区域 */}
@@ -509,20 +525,6 @@ const Index = () => {
 
             {/* 底部操作区 */}
             <View className='detail-footer'>
-              <View className='stats-row'>
-                <View className='stat-item'>
-                  <Text className='stat-icon'>🔥</Text>
-                  <Text className='stat-value'>{selectedPrompt.likes}</Text>
-                </View>
-                <View className='stat-item'>
-                  <Text className='stat-icon'>💬</Text>
-                  <Text className='stat-value'>{selectedPrompt.comments}</Text>
-                </View>
-                <View className='stat-item'>
-                  <Text className='stat-icon'>⭐</Text>
-                  <Text className='stat-value'>{selectedPrompt.rating}</Text>
-                </View>
-              </View>
               <View className='action-buttons'>
                 <View className='action-btn favorite-btn'>
                   <Text className='btn-icon'>❤️</Text>

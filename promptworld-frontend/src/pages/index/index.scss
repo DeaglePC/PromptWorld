@@ -1822,7 +1822,7 @@ html {
   backdrop-filter: blur(30px) saturate(200%);
   -webkit-backdrop-filter: blur(30px) saturate(200%);
   border-radius: 25px;
-  padding: 32px;
+  padding: 20px;
   box-shadow: 
     0 25px 50px rgba(0, 0, 0, 0.2),
     inset 0 1px 0 rgba(255, 255, 255, 0.3),
@@ -1873,7 +1873,6 @@ html {
 }
 
 .prompt-detail-header {
-  margin-bottom: 32px;
   text-align: center;
 }
 
@@ -1881,7 +1880,7 @@ html {
   font-size: var(--font-size-title);
   font-weight: 700;
   color: #ffffff;
-  margin: 32rpx 0 16rpx 0;
+  margin: 15rpx 0 16rpx 0;
   line-height: 1.3;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   display: block;
@@ -1891,10 +1890,50 @@ html {
   font-size: var(--font-size-large);
   color: #f7fafc;
   line-height: 1.6;
-  margin: 0 0 32rpx 0;
+  margin: 0 0 16rpx 0;
   font-weight: 500;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   display: block;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20rpx;
+  margin-top: 16rpx;
+  margin-bottom: 16rpx;
+  opacity: 0.7;
+  
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 6rpx;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 4rpx 12rpx;
+    border-radius: 16rpx;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    
+    &:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+      opacity: 1;
+    }
+    
+    .stat-icon {
+      font-size: 14rpx;
+      opacity: 0.8;
+    }
+    
+    .stat-value {
+      font-size: 12rpx;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.8);
+      text-shadow: none;
+    }
+  }
 }
 
 .prompt-detail-body {
@@ -2278,7 +2317,7 @@ html {
 }
 
 .content-section {
-  margin-bottom: 30px;
+  //margin-bottom: 30px;
   
   .section-header {
     display: flex;
@@ -2305,7 +2344,7 @@ html {
     border: 1px solid rgba(255, 255, 255, 0.15);
     
     .content-text {
-      padding: 40rpx;
+      padding: 10rpx;
       font-size: 15rpx;
       line-height: 1.7;
       color: rgba(255, 255, 255, 0.85);
@@ -2380,37 +2419,12 @@ html {
 .detail-footer {
   padding: 10px 10px;
   background: transparent;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-top: 20px;
   margin-bottom: 0px;
   
-  .stats-row {
-    display: flex;
-    justify-content: flex-start;
-    gap: 20px;
-    
-    .stat-item {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-      
-      .stat-icon {
-        font-size: 16rpx;
-      }
-      
-      .stat-value {
-        font-size: 16rpx;
-        font-weight: 500;
-        color: rgba(255, 255, 255, 0.8);
-      }
-    }
-  }
-  
   .action-buttons {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     gap: 8px;
     
     .action-btn {
@@ -2465,6 +2479,7 @@ html {
   .prompt-detail-content {
     margin: 10px;
     max-height: 95vh;
+    padding: 12px;
   }
   
   .detail-header {
@@ -2502,15 +2517,77 @@ html {
   }
 }
 
+/* 小程序环境下的详情页字体优化 */
+.env-weapp, .env-miniprogram {
+  .prompt-detail-content {
+    max-height: 90vh !important;
+    margin: 20rpx auto !important;
+  }
+  
+  .content-scroll {
+    max-height: 600rpx !important;
+  }
+  
+  .modal-prompt-title {
+    font-size: 60rpx !important;
+    margin: 30rpx 0 20rpx 0 !important;
+  }
+  
+  .modal-prompt-description {
+    font-size: 32rpx !important;
+    margin: 0 0 24rpx 0 !important;
+  }
+  
+  .stats-row {
+    gap: 30rpx !important;
+    margin: 24rpx 0 !important;
+    
+    .stat-item {
+      padding: 8rpx 20rpx !important;
+      
+      .stat-icon {
+        font-size: 24rpx !important;
+      }
+      
+      .stat-value {
+        font-size: 22rpx !important;
+      }
+    }
+  }
+  
+  .section-title {
+    font-size: 32rpx !important;
+  }
+  
+  .content-text {
+    font-size: 28rpx !important;
+    padding: 40rpx !important;
+    line-height: 1.8 !important;
+  }
+  
+  .action-btn {
+    padding: 16rpx 32rpx !important;
+    
+    .btn-icon {
+      font-size: 28rpx !important;
+    }
+    
+    .btn-text {
+      font-size: 26rpx !important;
+    }
+  }
+}
+
 /* PC模式下的详情页优化 */
 .env-h5.platform-desktop {
   .prompt-detail-content {
     max-width: 1000px;
-    margin: 40px auto;
+    max-height: 85vh;
+    margin: 20px auto;
     padding: 40px;
     
     .content-scroll {
-      max-height: 400px;
+      max-height: 500px;
       
       .content-text {
         font-size: 16rpx;
