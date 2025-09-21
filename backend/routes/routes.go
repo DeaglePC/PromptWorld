@@ -13,9 +13,17 @@ func SetupRoutes() *gin.Engine {
 
 	// 配置CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{"http://localhost:3000", "http://localhost:8080", "http://127.0.0.1:3000", "http://127.0.0.1:8080"}
+	config.AllowOrigins = []string{
+		"http://localhost:3000",
+		"http://localhost:8080",
+		"http://localhost:10086",
+		"http://127.0.0.1:3000",
+		"http://127.0.0.1:8080",
+		"http://127.0.0.1:10086",
+	}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
+	config.AllowCredentials = true
 	router.Use(cors.New(config))
 
 	// API路由组
@@ -32,14 +40,12 @@ func SetupRoutes() *gin.Engine {
 		api.GET("/categories", controllers.GetCategories) // 获取所有分类
 	}
 
-	// 静态文件服务
-	router.Static("/static", "../frontend/static")
-	router.LoadHTMLGlob("../frontend/templates/*")
-
-	// 首页路由
+	// API健康检查
 	router.GET("/", func(c *gin.Context) {
-		c.HTML(200, "index.html", gin.H{
-			"title": "PromptWorld - AI提示词分享平台",
+		c.JSON(200, gin.H{
+			"message": "PromptWorld API Server",
+			"version": "1.0.0",
+			"status":  "running",
 		})
 	})
 
