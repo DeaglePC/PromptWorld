@@ -13,14 +13,15 @@ func SetupRoutes() *gin.Engine {
 
 	// 配置CORS
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{
-		"http://localhost:3000",
-		"http://localhost:8080",
-		"http://localhost:10086",
-		"http://127.0.0.1:3000",
-		"http://127.0.0.1:8080",
-		"http://127.0.0.1:10086",
-	}
+	// config.AllowOrigins = []string{
+	// 	"http://localhost:3000",
+	// 	"http://localhost:8080",
+	// 	"http://localhost:10086",
+	// 	"http://127.0.0.1:3000",
+	// 	"http://127.0.0.1:8080",
+	// 	"http://127.0.0.1:10086",
+	// }
+	config.AllowOrigins = []string{"*"}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Type", "Accept", "Authorization"}
 	config.AllowCredentials = true
