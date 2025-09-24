@@ -445,7 +445,8 @@ const Index = () => {
               <Text className='modal-prompt-title'>{selectedPrompt.title}</Text>
               <Text className='modal-prompt-description'>{selectedPrompt.description}</Text>
               
-              {/* 统计信息 */}
+              {/* 统计信息 - 暂时注释，后续再加 */}
+              {/* 
               <View className='stats-row'>
                 <View className='stat-item'>
                   <Text className='stat-icon'>🔥</Text>
@@ -460,6 +461,7 @@ const Index = () => {
                   <Text className='stat-value'>{selectedPrompt.rating}</Text>
                 </View>
               </View>
+              */}
             </View>
 
             {/* 内容区域 */}

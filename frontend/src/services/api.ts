@@ -50,11 +50,6 @@ export const getPrompts = (params?: {
   })
 }
 
-export const getPromptById = (id: string) => {
-  return request({
-    url: `/prompts/${id}`
-  })
-}
 
 export const getCategories = () => {
   return request({
@@ -66,8 +61,6 @@ export const getCategories = () => {
 export const api = {
   // 获取提示词列表
   getPrompts,
-  // 获取单个提示词详情  
-  getPromptById,
   // 获取分类列表
   getCategories
 }

@@ -1,7 +1,6 @@
-export default defineAppConfig({
+export default {
   pages: [
-    'pages/index/index',
-    'pages/detail/index'
+    'pages/index/index'
   ],
   window: {
     backgroundTextStyle: 'light',
@@ -11,4 +10,4 @@ export default defineAppConfig({
     enablePullDownRefresh: true,
     backgroundColor: '#c6ffdd'
   }
-})
+}
