@@ -2424,7 +2424,7 @@ html {
   
   .action-buttons {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end; // 大屏模式下按钮靠右
     gap: 8px;
     
     .action-btn {
@@ -2509,6 +2509,7 @@ html {
     .action-buttons {
       flex-direction: column;
       gap: 12px;
+      justify-content: center; // 手机模式下按钮居中
       
       .action-btn {
         justify-content: center;

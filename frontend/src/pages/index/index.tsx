@@ -367,11 +367,15 @@ const Index = () => {
               </View>
 
               <View className='prompt-meta'>
+                
                 <View className='prompt-stats'>
+                  {/* 
                   <Text className='stat-item'>👍 {prompt.likes}</Text>
                   <Text className='stat-item'>💬 {prompt.comments}</Text>
                   <Text className='stat-item'>⭐ {prompt.rating}</Text>
+                  */}
                 </View>
+                
                 <View
                   className='btn copy-btn'
                   onClick={(e) => {
@@ -531,10 +535,12 @@ const Index = () => {
             {/* 底部操作区 */}
             <View className='detail-footer'>
               <View className='action-buttons'>
+                {/* 
                 <View className='action-btn favorite-btn'>
                   <Text className='btn-icon'>❤️</Text>
                   <Text className='btn-text'>收藏</Text>
                 </View>
+                 */}
                 <View 
                   className='action-btn copy-btn'
                   onClick={() => copyToClipboard(selectedPrompt.content)}
