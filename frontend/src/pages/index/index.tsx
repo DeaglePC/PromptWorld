@@ -321,7 +321,10 @@ const Index = () => {
                   {prompt.tags.length > 3 && (
                     <Text 
                       className='more-hashtags'
-                      onClick={() => toggleTagsExpansion(prompt.id)}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        toggleTagsExpansion(prompt.id);
+                      }}
                     >
                       {expandedTags[prompt.id] ? '收起' : `+${prompt.tags.length - 3}`}
                     </Text>

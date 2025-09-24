@@ -2477,9 +2477,9 @@ html {
 /* 详情页响应式设计 */
 @media (max-width: 768px) {
   .prompt-detail-content {
-    margin: 10px;
+    margin: 0px;
     max-height: 95vh;
-    padding: 12px;
+    padding: 9px;
   }
   
   .detail-header {

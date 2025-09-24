@@ -4,7 +4,6 @@ services:
   promptworld-frontend:
     build:
       context: .
-      dockerfile: Dockerfile.ubuntu
     container_name: promptworld-frontend
     ports:
       - "3000:80"
