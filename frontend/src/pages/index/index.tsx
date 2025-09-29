@@ -135,29 +135,22 @@ const Index = () => {
   };
 
   const openImageModal = (imageUrl: string, allImages?: string[]) => {
-    // 检查当前环境，小程序使用原生API，H5/PC使用自定义模态框
+    // 统一使用Taro的原生图片预览API，支持所有平台
     console.log('当前环境:', process.env.TARO_ENV);
     console.log('点击的图片URL:', imageUrl);
     console.log('所有图片URLs:', allImages);
     
-    if (process.env.TARO_ENV === 'weapp' || process.env.TARO_ENV === 'alipay' || process.env.TARO_ENV === 'swan') {
-      // 小程序环境使用原生图片预览
-      const urls = allImages || [imageUrl];
-      
-      // 确保current参数是urls数组中的一个元素
-      const currentImage = urls.includes(imageUrl) ? imageUrl : urls[0];
-      
-      console.log('预览参数:', { current: currentImage, urls });
-      
-      Taro.previewImage({
-        current: currentImage,
-        urls: urls
-      });
-    } else {
-      // H5/PC环境使用自定义模态框
-      console.log('设置图片URL:', imageUrl);
-      setSelectedImage(imageUrl);
-    }
+    const urls = allImages || [imageUrl];
+    
+    // 确保current参数是urls数组中的一个元素
+    const currentImage = urls.includes(imageUrl) ? imageUrl : urls[0];
+    
+    console.log('预览参数:', { current: currentImage, urls });
+    
+    Taro.previewImage({
+      current: currentImage,
+      urls: urls
+    });
   };
 
   const closeImageModal = () => {
@@ -401,37 +394,7 @@ const Index = () => {
 
 
 
-      {/* H5/PC模式图片模态框 */}
-      {selectedImage && (
-        <View 
-          className='image-modal' 
-          onClick={closeImageModal}
-          catchMove={process.env.TARO_ENV !== 'h5'} // 小程序环境下阻止滚动穿透
-        >
-          <View className='modal-content' onClick={closeImageModal}>
-            <Image 
-              src={selectedImage} 
-              className='modal-image' 
-              mode='aspectFill'
-              onLoad={() => console.log('H5图片加载成功:', selectedImage)}
-              onError={(e) => console.log('H5图片加载失败:', e, selectedImage)}
-              onClick={closeImageModal}
-              style={{
-                width: '80vw',
-                height: '70vh',
-                maxWidth: '800px',
-                maxHeight: '600px',
-                minWidth: '400px',
-                minHeight: '300px',
-                objectFit: 'cover',
-                borderRadius: '8px',
-                boxShadow: '0 10px 30px rgba(0, 0, 0, 0.3)',
-                cursor: 'pointer'
-              }}
-            />
-          </View>
-        </View>
-      )}
+
 
       {/* 提示词详情模态框 */}
       {selectedPrompt && (
