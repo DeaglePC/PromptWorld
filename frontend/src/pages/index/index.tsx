@@ -1,14 +1,14 @@
-import { View, Text, ScrollView, Input, Image } from '@tarojs/components'
+import { View, Text, ScrollView, Input, Image, RichText } from '@tarojs/components'
 import { useState, useEffect } from 'react'
 import { Prompt } from '../../types'
 import './index.scss'
 import Taro from '@tarojs/taro'
+import { marked } from 'marked'
 
 const Index = () => {
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [categories, setCategories] = useState<string[]>(['全部']);
   const [activeCategory, setActiveCategory] = useState('全部');
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedPrompt, setSelectedPrompt] = useState<Prompt | null>(null);
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -153,9 +153,6 @@ const Index = () => {
     });
   };
 
-  const closeImageModal = () => {
-    setSelectedImage(null);
-  };
 
   const openPromptDetail = (prompt: Prompt) => {
     setSelectedPrompt(prompt);
@@ -196,6 +193,27 @@ const Index = () => {
       duration: 300
     });
   };
+
+  // 解析Markdown内容
+  const parseMarkdown = (content: string): string => {
+    try {
+      // 配置marked选项
+      marked.setOptions({
+        breaks: true, // 支持换行
+        gfm: true,    // 支持GitHub风格的Markdown
+      });
+      
+      // 解析Markdown并返回HTML字符串
+      const html = marked.parse(content);
+      return typeof html === 'string' ? html : String(html);
+    } catch (error) {
+      console.error('Markdown解析失败:', error);
+      // 如果解析失败，返回原始内容并转换换行符
+      return content.replace(/\n/g, '<br/>');
+    }
+  };
+
+
 
   return (
     <View className={`index env-${process.env.TARO_ENV}`}>
@@ -356,7 +374,10 @@ const Index = () => {
               )}
               
               <View className='prompt-content'>
-                {prompt.content}
+                {prompt.content.length > 150 
+                  ? `${prompt.content.substring(0, 150)}...` 
+                  : prompt.content
+                }
               </View>
 
               <View className='prompt-meta'>
@@ -410,7 +431,12 @@ const Index = () => {
             {/* 标题区域 */}
             <View className='prompt-detail-header'>
               <Text className='modal-prompt-title'>{selectedPrompt.title}</Text>
-              <Text className='modal-prompt-description'>{selectedPrompt.description}</Text>
+              <View className='modal-prompt-description'>
+                <RichText 
+                  nodes={parseMarkdown(selectedPrompt.description)} 
+                  className='description-rich-text'
+                />
+              </View>
               
               {/* 统计信息 - 暂时注释，后续再加 */}
               {/* 
@@ -464,7 +490,12 @@ const Index = () => {
                   <Text className='section-title'>完整提示词</Text>
                 </View>
                 <ScrollView className='content-scroll' scrollY>
-                  <Text className='content-text'>{selectedPrompt.content}</Text>
+                  <View className='content-wrapper'>
+                    <RichText 
+                      nodes={parseMarkdown(selectedPrompt.content.trim())} 
+                      className='content-rich-text'
+                    />
+                  </View>
                 </ScrollView>
               </View>
               
